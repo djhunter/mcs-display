@@ -1,3 +1,6 @@
+# API Key on local machine, not on repo
+darkskyapikey.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
