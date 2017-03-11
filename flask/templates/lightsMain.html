@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+      <title>{{ title }}</title>
+  
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/normalize.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/skeleton.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static',filename='images/favicon.png') }}">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="six columns" style="margin-top: 5%">
+        <h2>{{ title }}</h2>
+        <a class="button button-primary" href="/bubbleSort/25">Bubble Sort</a> 
+        <br>
+        <a class="button button-primary" href="/heapSort/25">Heap Sort</a> 
+        <br>
+        <a class="button button-primary" href="/quickSort/25">Quick Sort</a> 
+        <br>
+        <a class="button button-primary" href="/binCount/100">Binary Counter</a>
+        <br>
+        <a class="button button-primary" href="/moshPit/12">Mosh Pit</a>
+        <br>
+        <a class="button button-primary" href="/sierpinski/1">Sierpinski</a>
+        <br>
+        <a class="button" href="/stop">Stop</a>
+<!--        <br>
+        <a class="button button-primary" href="/photo">Update Photo</a>
+-->
+      </div>
+      <div class="six columns" style="margin-top: 10%">
+      <p> {{ message }} </p>
+      </div>
+    </div>
+<!--    <img src="{{ url_for('static', filename='images/pagephoto.jpg') }}"> -->
+  </div>
+</body>
+</html>
+
