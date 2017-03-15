@@ -472,9 +472,11 @@ def weatherForecast(wait_ms):
         SPACER_PIXELS = 5
         for d in range(NUM_DAYS):
             weatherIcon = iconPixels(forecast.daily().data[d].icon)
+            print('Weather icon text: ' + repr(weatherIcon)) # for debugging
             l = len(weatherIcon)
             for i in range(l):
                 strip.setPixelColor(d*(l+SPACER_PIXELS)+i, weatherIcon[i])
+        strip.show()
 
         SECONDS_TO_DISPLAY = 120
         for i in range(SECONDS_TO_DISPLAY):
