@@ -419,7 +419,7 @@ def weatherThread(ms):
 	t.start()
    	templateData = {
       		'title' : 'Math/CS Lights',
-      		'message' : 'Showing five-day weather forecast.'
+      		'message' : 'Showing seven-day weather forecast.'
      		}
 	return render_template('lightsMain.html', **templateData)
 
@@ -437,16 +437,16 @@ def iconPixels(iconString): # returns a 30 pixel-wide array
         defaultIcon = [b,b,b,r,r,o,o,o,y,y,y,y,y,y,y,y,y,o,o,o,r,r,b,b,b,b,b,b,b,b]
 
         return {
-                "clear-day" :   [b,b,b,r,r,o,o,o,y,y,y,y,y,y,y,y,y,o,o,o,r,r,b,b,b,b,b,b,b,b],
-                "clear-night" : [w,k,k,k,w,k,k,w,k,k,w,w,w,w,w,w,w,w,w,k,k,k,k,k,k,w,k,k,w,k],
+                "clear-day" :   [b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b],
+                "clear-night" : [b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b],
                 "rain" :        [g,h,k,g,h,k,g,h,k,g,h,k,g,h,k,g,h,k,g,h,k,g,h,k,g,h,k,g,h,k],
                 "snow" :        [w,w,w,w,k,w,w,w,w,k,w,w,w,w,k,w,w,w,w,k,w,w,w,w,k,w,w,w,w,k],
                 "sleet" :       [g,h,k,w,w,g,h,k,w,w,g,h,k,w,w,g,h,k,w,w,g,h,k,w,w,g,h,k,w,w],
                 "wind" :        [g,g,g,r,r,o,o,o,y,y,y,y,y,y,y,y,y,o,o,o,r,r,g,g,g,g,g,g,g,g],
-                "fog" :         [g,b,g,r,g,o,g,o,g,y,g,g,g,g,g,g,y,g,g,o,g,r,g,g,b,g,b,g,b,g],
+                "fog" :         [g,g,g,g,g,g,w,g,g,g,g,g,w,g,g,g,g,g,g,g,g,g,g,g,w,g,g,g,g,g],
                 "cloudy" :      [g,g,g,g,g,g,w,g,g,g,g,g,w,g,g,g,g,g,g,g,g,g,g,g,w,g,g,g,g,g],
-                "partly-cloudy-day" : [g,g,g,g,w,g,g,g,g,g,g,w,y,y,y,y,y,o,o,o,r,r,b,b,b,b,b,b,b,b],
-                "partly-cloudy-night" : [g,g,g,g,g,g,g,g,g,g,g,g,w,w,w,w,w,w,w,k,k,k,k,k,k,w,k,k,w,k],
+                "partly-cloudy-day" : [b,b,b,b,w,w,w,w,w,w,b,b,b,w,w,w,w,w,w,w,w,w,b,b,b,b,b,b,b,b],
+                "partly-cloudy-night" : [b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b],
                 }.get(iconString, defaultIcon)
 
 def weatherForecast(wait_ms):
@@ -470,9 +470,9 @@ def weatherForecast(wait_ms):
 	time.sleep(wait_ms/1000.0)
 
         NUM_DAYS = 7
-        SPACER_PIXELS = 10
+        SPACER_PIXELS = 14
         for d in range(NUM_DAYS):
-            print(iconPixels(forecast.daily().data[d].icon)) # debug
+            print(forecast.daily().data[d].icon) # debug
             weatherIcon = iconPixels(forecast.daily().data[d].icon)
             print('Weather icon text: ' + repr(weatherIcon)) # for debugging
             l = len(weatherIcon)
@@ -480,7 +480,7 @@ def weatherForecast(wait_ms):
                 strip.setPixelColor(LED_COUNT - 1 - (d*(l+SPACER_PIXELS)+i), weatherIcon[i])
         strip.show()
 
-        SECONDS_TO_DISPLAY = 120
+        SECONDS_TO_DISPLAY = 600
         for i in range(SECONDS_TO_DISPLAY):
             if interrupt: 
                 break
