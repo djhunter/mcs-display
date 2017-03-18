@@ -426,7 +426,8 @@ def weatherThread(ms):
 def iconPixels(iconString): # returns a 30 pixel-wide array
         r = 16711680 # Color(255,0,0)
         y = 16776960 # Yellow
-        b = Color(153,204,255) # Sky blue
+#        b = Color(153,204,255) # Sky blue
+        b = Color(76,102,255) # Sky blue
         g = Color(160,160,160) # Gray
         w = Color(255,255,255) # White
         o = Color(255,128,0) # Orange
@@ -469,13 +470,14 @@ def weatherForecast(wait_ms):
 	time.sleep(wait_ms/1000.0)
 
         NUM_DAYS = 7
-        SPACER_PIXELS = 5
+        SPACER_PIXELS = 10
         for d in range(NUM_DAYS):
+            print(iconPixels(forecast.daily().data[d].icon)) # debug
             weatherIcon = iconPixels(forecast.daily().data[d].icon)
             print('Weather icon text: ' + repr(weatherIcon)) # for debugging
             l = len(weatherIcon)
             for i in range(l):
-                strip.setPixelColor(d*(l+SPACER_PIXELS)+i, weatherIcon[i])
+                strip.setPixelColor(LED_COUNT - 1 - (d*(l+SPACER_PIXELS)+i), weatherIcon[i])
         strip.show()
 
         SECONDS_TO_DISPLAY = 120
