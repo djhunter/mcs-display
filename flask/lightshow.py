@@ -2,6 +2,8 @@
 import time
 import random
 import forecastio  # for weather forecast
+import numpy as np
+import cv2 # for usb camera
 
 from subprocess import call
 from threading import Thread
@@ -501,6 +503,51 @@ def takePhoto():
      		}
 	return render_template('lightsMain.html', **templateData)
 
+
+@app.route("/mirror/<ms>")
+def mirrorThread(ms):
+	t = Thread(target=displayMirror, args = (int(ms),))
+	t.start()
+   	templateData = {
+      		'title' : 'Math/CS Lights',
+      		'message' : 'One-dimensional mirror.'
+     		}
+	return render_template('lightsMain.html', **templateData)
+
+def displayMirror(wait_ms)
+	global interrupt
+	interrupt = True # Stop show currently running
+	time.sleep(STOP_DELAY) 
+	interrupt = False
+
+	strip.setBrightness(100) 
+
+        cap = cv2.VideoCapture(0)
+        success, frame = cap.read()
+        
+        if !success:
+            print("Failed to open camera")
+            return
+
+        FRAME_WIDTH = 640
+        FRAME_LINE = 240 # line to show
+
+        # frame[FRAME_LINE, 0:639, 0:2]
+
+        for i in range(LED_COUNT)
+                rpix = frame[FRAME_LINE, 2*i, 0]
+                gpix = frame[FRAME_LINE, 2*i, 0]
+                bpix = frame[FRAME_LINE, 2*i, 0]
+                strip.setPixelColor(i, Color(rpix, gpix, bpix))
+        strip.show()
+        time.sleep(10)
+        
+        cap.release()
+	for i in range(LED_COUNT):
+		strip.setPixelColor(i, 0)
+	strip.show()
+	time.sleep(wait_ms/1000.0)
+
 if __name__ == '__main__':
 	# Create NeoPixel object with appropriate configuration.
 	strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
@@ -508,4 +555,5 @@ if __name__ == '__main__':
 	strip.begin()
 	# Start Flask server listening on port 80
 	app.run(host='0.0.0.0', port=80, debug=True) 
+
 
