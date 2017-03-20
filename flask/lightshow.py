@@ -514,7 +514,7 @@ def mirrorThread(ms):
      		}
 	return render_template('lightsMain.html', **templateData)
 
-def displayMirror(wait_ms)
+def displayMirror(wait_ms):
 	global interrupt
 	interrupt = True # Stop show currently running
 	time.sleep(STOP_DELAY) 
@@ -525,7 +525,7 @@ def displayMirror(wait_ms)
         cap = cv2.VideoCapture(0)
         success, frame = cap.read()
         
-        if !success:
+        if not success:
             print("Failed to open camera")
             return
 
@@ -533,14 +533,21 @@ def displayMirror(wait_ms)
         FRAME_LINE = 240 # line to show
 
         # frame[FRAME_LINE, 0:639, 0:2]
-
-        for i in range(LED_COUNT)
+        NUM_FRAMES = 10000
+        for j in range(NUM_FRAMES):
+            for i in range(LED_COUNT):
                 rpix = frame[FRAME_LINE, 2*i, 0]
-                gpix = frame[FRAME_LINE, 2*i, 0]
-                bpix = frame[FRAME_LINE, 2*i, 0]
-                strip.setPixelColor(i, Color(rpix, gpix, bpix))
-        strip.show()
-        time.sleep(10)
+                gpix = frame[FRAME_LINE, 2*i, 1]
+                bpix = frame[FRAME_LINE, 2*i, 2]
+                strip.setPixelColor(i, Color(gpix, bpix, rpix))
+            strip.show()
+            time.sleep(wait_ms/1000.0)
+            if interrupt:
+                break
+            success, frame = cap.read()
+            if not success:
+                print("Failed to read frame")
+                break
         
         cap.release()
 	for i in range(LED_COUNT):
