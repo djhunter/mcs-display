@@ -557,7 +557,7 @@ def displayMirror(wait_ms):
 
 @app.route("/vidscan/<ms>")
 def vidscanThread(ms):
-	t = Thread(target=displayMirror, args = (int(ms),))
+	t = Thread(target=videoScan, args = (int(ms),))
 	t.start()
    	templateData = {
       		'title' : 'Math/CS Lights',
@@ -600,6 +600,8 @@ def videoScan(wait_ms):
             if not success:
                 print("Failed to read frame")
                 break
+          if interrupt:
+             break
         
         cap.release()
 	for i in range(LED_COUNT):
