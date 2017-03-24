@@ -555,6 +555,58 @@ def displayMirror(wait_ms):
 	strip.show()
 	time.sleep(wait_ms/1000.0)
 
+@app.route("/vidscan/<ms>")
+def vidscanThread(ms):
+	t = Thread(target=displayMirror, args = (int(ms),))
+	t.start()
+   	templateData = {
+      		'title' : 'Math/CS Lights',
+      		'message' : 'Video scan line.'
+     		}
+	return render_template('lightsMain.html', **templateData)
+
+def videoScan(wait_ms):
+	global interrupt
+	interrupt = True # Stop show currently running
+	time.sleep(STOP_DELAY) 
+	interrupt = False
+
+	strip.setBrightness(100) 
+
+        cap = cv2.VideoCapture(0)
+        success, frame = cap.read()
+        
+        if not success:
+            print("Failed to open camera")
+            return
+
+        FRAME_WIDTH = 640
+        FRAME_HEIGHT = 480
+
+        # frame[0:479, 0:639, 0:2]
+        NUM_FRAMES = 100
+        for j in range(NUM_FRAMES):
+          for k in range(FRAME_HEIGHT):
+            for i in range(LED_COUNT):
+                bpix = frame[k, 2*i, 0]
+                rpix = frame[k, 2*i, 1]
+                gpix = frame[k, 2*i, 2]
+                strip.setPixelColor(i, Color(rpix, gpix, bpix))
+            strip.show()
+            time.sleep(wait_ms/1000.0)
+            if interrupt:
+                break
+            success, frame = cap.read()
+            if not success:
+                print("Failed to read frame")
+                break
+        
+        cap.release()
+	for i in range(LED_COUNT):
+		strip.setPixelColor(i, 0)
+	strip.show()
+	time.sleep(wait_ms/1000.0)
+
 if __name__ == '__main__':
 	# Create NeoPixel object with appropriate configuration.
 	strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
