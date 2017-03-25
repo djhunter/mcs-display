@@ -529,17 +529,19 @@ def displayMirror(wait_ms):
             print("Failed to open camera")
             return
 
+        cv2.imwrite("static/images/vidcap.jpg", frame)
+
         FRAME_WIDTH = 640
         FRAME_LINE = 240 # line to show
 
         # frame[FRAME_LINE, 0:639, 0:2]
-        NUM_FRAMES = 10000
+        NUM_FRAMES = 30000
         for j in range(NUM_FRAMES):
             for i in range(LED_COUNT):
-                rpix = frame[FRAME_LINE, 2*i, 0]
-                gpix = frame[FRAME_LINE, 2*i, 1]
-                bpix = frame[FRAME_LINE, 2*i, 2]
-                strip.setPixelColor(i, Color(gpix, bpix, rpix))
+                bpix = frame[FRAME_LINE, 2*i, 0]
+                rpix = frame[FRAME_LINE, 2*i, 1]
+                gpix = frame[FRAME_LINE, 2*i, 2]
+                strip.setPixelColor(i, Color(rpix, gpix, bpix))
             strip.show()
             time.sleep(wait_ms/1000.0)
             if interrupt:

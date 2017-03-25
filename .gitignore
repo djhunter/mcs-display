@@ -1,6 +1,9 @@
 # API Key on local machine, not on repo
 darkskyapikey.txt
 
+# Images that update regularly
+vidcap.jpg
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
