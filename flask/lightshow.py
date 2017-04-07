@@ -620,3 +620,63 @@ if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=80, debug=True) 
 
 
+@app.route("/pacman/<ms>")
+def mirrorThread(ms):
+	t = Thread(target=displayPacman, args = (int(ms),))
+	t.start()
+   	templateData = {
+      		'title' : 'Math/CS Lights',
+      		'message' : 'One-dimensional PacMan.'
+     		}
+	return render_template('lightsMain.html', **templateData)
+
+def displayPacman(wait_ms):
+	global interrupt
+	interrupt = True # Stop show currently running
+	time.sleep(STOP_DELAY) 
+	interrupt = False
+
+	strip.setBrightness(100) # make brighter later 
+
+        cap = cv2.VideoCapture(0)
+        success, frame = cap.read()
+        
+        if not success:
+            print("Failed to open camera")
+            return
+
+        cv2.imwrite("static/images/vidcap.jpg", frame)
+        lastBpix = frame[FRAME_LINE, 2*i, 0]
+        lastRpix = frame[FRAME_LINE, 2*i, 1]
+        lastGpix = frame[FRAME_LINE, 2*i, 2]
+
+        FRAME_WIDTH = 640
+        FRAME_LINE = 240 # line to show
+
+        NUM_FRAMES = 30000
+        for j in range(NUM_FRAMES):
+	    for i in range(LED_COUNT):
+		strip.setPixelColor(i, 0)
+            for i in range(LED_COUNT):
+                bpix = frame[FRAME_LINE, 2*i, 0]
+                rpix = frame[FRAME_LINE, 2*i, 1]
+                gpix = frame[FRAME_LINE, 2*i, 2]
+                if [rpix, bpix, gpix] != [lastBpix, lastRpix, lastGpix]:
+                    strip.setPixelColor(i, Color(255, 0, 0))
+                lastRpix = rpix
+                lastGpix = gpix
+                lastBpix = bpix
+            strip.show()
+            time.sleep(wait_ms/1000.0)
+            if interrupt:
+                break
+            success, frame = cap.read()
+            if not success:
+                print("Failed to read frame")
+                break
+        
+        cap.release()
+	for i in range(LED_COUNT):
+		strip.setPixelColor(i, 0)
+	strip.show()
+	time.sleep(wait_ms/1000.0)
