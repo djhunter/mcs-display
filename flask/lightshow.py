@@ -611,17 +611,8 @@ def videoScan(wait_ms):
 	strip.show()
 	time.sleep(wait_ms/1000.0)
 
-if __name__ == '__main__':
-	# Create NeoPixel object with appropriate configuration.
-	strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
-	# Intialize the light strip library 
-	strip.begin()
-	# Start Flask server listening on port 80
-	app.run(host='0.0.0.0', port=80, debug=True) 
-
-
 @app.route("/pacman/<ms>")
-def mirrorThread(ms):
+def pacmanThread(ms):
 	t = Thread(target=displayPacman, args = (int(ms),))
 	t.start()
    	templateData = {
@@ -645,13 +636,18 @@ def displayPacman(wait_ms):
             print("Failed to open camera")
             return
 
-        cv2.imwrite("static/images/vidcap.jpg", frame)
-        lastBpix = frame[FRAME_LINE, 2*i, 0]
-        lastRpix = frame[FRAME_LINE, 2*i, 1]
-        lastGpix = frame[FRAME_LINE, 2*i, 2]
-
         FRAME_WIDTH = 640
         FRAME_LINE = 240 # line to show
+
+        lastBpix = [0] * LED_COUNT
+        lastRpix = [0] * LED_COUNT
+        lastGpix = [0] * LED_COUNT
+
+        cv2.imwrite("static/images/vidcap.jpg", frame)
+        for i in range(LED_COUNT):
+            lastBpix[i] = frame[FRAME_LINE, 2*i, 0]
+            lastRpix[i] = frame[FRAME_LINE, 2*i, 1]
+            lastGpix[i] = frame[FRAME_LINE, 2*i, 2]
 
         NUM_FRAMES = 30000
         for j in range(NUM_FRAMES):
@@ -661,11 +657,11 @@ def displayPacman(wait_ms):
                 bpix = frame[FRAME_LINE, 2*i, 0]
                 rpix = frame[FRAME_LINE, 2*i, 1]
                 gpix = frame[FRAME_LINE, 2*i, 2]
-                if [rpix, bpix, gpix] != [lastBpix, lastRpix, lastGpix]:
+                if [rpix, gpix, bpix] != [lastRpix[i], lastGpix[i], lastBpix[i]]:
                     strip.setPixelColor(i, Color(255, 0, 0))
-                lastRpix = rpix
-                lastGpix = gpix
-                lastBpix = bpix
+                lastRpix[i] = rpix
+                lastGpix[i] = gpix
+                lastBpix[i] = bpix
             strip.show()
             time.sleep(wait_ms/1000.0)
             if interrupt:
@@ -680,3 +676,12 @@ def displayPacman(wait_ms):
 		strip.setPixelColor(i, 0)
 	strip.show()
 	time.sleep(wait_ms/1000.0)
+
+if __name__ == '__main__':
+	# Create NeoPixel object with appropriate configuration.
+	strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
+	# Intialize the light strip library 
+	strip.begin()
+	# Start Flask server listening on port 80
+	app.run(host='0.0.0.0', port=80, debug=True) 
+
