@@ -645,23 +645,21 @@ def displayPacman(wait_ms):
 
         cv2.imwrite("static/images/vidcap.jpg", frame)
         for i in range(LED_COUNT):
-            lastBpix[i] = frame[FRAME_LINE, 2*i, 0]
-            lastRpix[i] = frame[FRAME_LINE, 2*i, 1]
-            lastGpix[i] = frame[FRAME_LINE, 2*i, 2]
+            lastBpix[i] = int(frame[FRAME_LINE, 2*i, 0])
+            lastRpix[i] = int(frame[FRAME_LINE, 2*i, 1])
+            lastGpix[i] = int(frame[FRAME_LINE, 2*i, 2])
 
         NUM_FRAMES = 30000
+        MOTION_THRESHOLD = 75
         for j in range(NUM_FRAMES):
 	    for i in range(LED_COUNT):
 		strip.setPixelColor(i, 0)
             for i in range(LED_COUNT):
-                bpix = frame[FRAME_LINE, 2*i, 0]
-                rpix = frame[FRAME_LINE, 2*i, 1]
-                gpix = frame[FRAME_LINE, 2*i, 2]
-                if [rpix, gpix, bpix] != [lastRpix[i], lastGpix[i], lastBpix[i]]:
+                bpix = int(frame[FRAME_LINE, 2*i, 0])
+                rpix = int(frame[FRAME_LINE, 2*i, 1])
+                gpix = int(frame[FRAME_LINE, 2*i, 2])
+                if abs(rpix-lastRpix[i]) + abs(gpix-lastGpix[i]) + abs(bpix-lastBpix[i]) > MOTION_THRESHOLD:
                     strip.setPixelColor(i, Color(255, 0, 0))
-                lastRpix[i] = rpix
-                lastGpix[i] = gpix
-                lastBpix[i] = bpix
             strip.show()
             time.sleep(wait_ms/1000.0)
             if interrupt:
