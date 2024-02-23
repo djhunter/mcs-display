@@ -322,7 +322,7 @@ def moshPit(wait_ms):
 	interrupt = True # Stop show currently running
 	time.sleep(STOP_DELAY) 
 	interrupt = False
-	NUM_BLIPS = 10
+	NUM_BLIPS = 20
 	blipSkip = random.sample(range(LED_COUNT, 2*LED_COUNT),NUM_BLIPS)
 	blipPos = [1 for i in range(NUM_BLIPS)]
 	blipDir = [1 for i in range(NUM_BLIPS)]
@@ -459,7 +459,7 @@ def weatherForecast(wait_ms):
 
         # need to have a local file containing the api key
         # for the darksky.net weather service
-        with open('darkskyapikey.txt', 'r') as myfile:
+        with open('/home/dhunter/mcs-display/flask/darkskyapikey.txt', 'r') as myfile:
             apiKey=myfile.read().replace('\n', '')
         lat = 34.4367
         lng = -119.6321
