@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Light strip controller using Flask
 import time
 import random
@@ -265,62 +264,6 @@ def quickSort(wait_ms):
 
 ####
 
-@app.route("/selectionSort/<ms>")
-def selectionSortThread(ms):
-    t = Thread(target=selectionSort, args = (int(ms),))
-    t.start()
-    templateData = {
-            'title' : 'Math/CS Lights',
-            'message' : 'Sorting colors through selection-sort.'
-            }
-    return render_template('lightsMain.html', **templateData)
-
-def selectionSort(wait_ms): # By descending order
-	global interrupt
-	interrupt = True # Stop show currently running
-	time.sleep(STOP_DELAY)
-	interrupt = False
-	strip.setBrightness(60)
-
-	blipColors = [ random.choice(range(LED_LASTCOLOR)) for i in xrange(LED_COUNT) ] # MAIN ARRAY
-
-	for i in range(LED_COUNT):
-		strip.setPixelColor(i, wheel(blipColors[i]))
-	strip.show()
-	time.sleep(wait_ms/1000.0)
-	print('Initial array: ' + repr(blipColors)) # for debugging
-
-    max = blipColors[0] # Algorithm start
-	for i in range(len(blipColors):
-    		for j in range(i,len(blipColors):
-    			compareFlash(j, j+1, wheel(blipColors[j]), wheel(blipColors[j+1]), wait_ms) #Premade -> may lead to IndexOutOfBounds
-    			if blipColors[i] > max:
-    			    max = blipColors[j]
-
-    				temp = blipColors[j] # Swap "Method"
-    				blipColors[j] = blipColors[i]
-    				blipColors[i] = temp
-
-    				strip.setPixelColor(j, wheel(blipColors[j])) #Premade -> may lead to IndexOutOfBounds
-                    strip.setPixelColor(j+1, wheel(blipColors[j+1]))
-                    strip.show()
-                    time.sleep(wait_ms/1000.0)
-
-    		max = 0
-
-    			if interrupt:
-    				break
-    		if interrupt:
-    			break
-
-	print('selectionSort finished: ' + repr(blipColors)) # for debugging
-	for i in range(LED_COUNT):
-		strip.setPixelColor(i, 0)
-	strip.show()
-	time.sleep(wait_ms/1000.0)
-
-####
-
 @app.route("/binCount/<ms>")
 def binCountThread(ms):
 	t = Thread(target=binaryCounter, args = (int(ms),))
@@ -379,7 +322,7 @@ def moshPit(wait_ms):
 	interrupt = True # Stop show currently running
 	time.sleep(STOP_DELAY) 
 	interrupt = False
-	NUM_BLIPS = 10
+	NUM_BLIPS = 20
 	blipSkip = random.sample(range(LED_COUNT, 2*LED_COUNT),NUM_BLIPS)
 	blipPos = [1 for i in range(NUM_BLIPS)]
 	blipDir = [1 for i in range(NUM_BLIPS)]
@@ -516,7 +459,7 @@ def weatherForecast(wait_ms):
 
         # need to have a local file containing the api key
         # for the darksky.net weather service
-        with open('darkskyapikey.txt', 'r') as myfile:
+        with open('/home/dhunter/mcs-display/flask/darkskyapikey.txt', 'r') as myfile:
             apiKey=myfile.read().replace('\n', '')
         lat = 34.4367
         lng = -119.6321
@@ -739,3 +682,4 @@ if __name__ == '__main__':
 	strip.begin()
 	# Start Flask server listening on port 80
 	app.run(host='0.0.0.0', port=80, debug=True) 
+
