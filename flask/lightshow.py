@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Light strip controller using Flask
 import time
 import random
@@ -738,4 +739,3 @@ if __name__ == '__main__':
 	strip.begin()
 	# Start Flask server listening on port 80
 	app.run(host='0.0.0.0', port=80, debug=True) 
-
